@@ -94,7 +94,7 @@ function App() {
 
   return (
     <div className="">
-      <div>
+      <div className="sidebar">
         {Object.values(nodesById).map((node) => (
           <NodeItem
             node={node}
