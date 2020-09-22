@@ -39,26 +39,27 @@ const NodeItem = ({
   const { id, title, connections } = node;
 
   return (
-    <div
-      onClick={(e) => {
-        onClick(id);
-      }}
-      key={id}
-      className={`node depth-${depth}`}
-    >
-      <p>
-        {depth} {title}
-      </p>
+    <div key={id} className={`node depth-${depth}`}>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onClick(id);
+        }}
+      >
+        {id} {title}
+      </button>
       {depth < 2 &&
-        getConnections(connections || []).map((n) => (
-          <NodeItem
-            node={n}
-            onClick={() => onClick(n.id)}
-            depth={depth + 1}
-            getConnections={getConnections}
-            key={n.id}
-          />
-        ))}
+        getConnections(connections || []).map((n) => {
+          return (
+            <NodeItem
+              node={n}
+              onClick={() => onClick(n.id)}
+              depth={depth + 1}
+              getConnections={getConnections}
+              key={n.id}
+            />
+          );
+        })}
     </div>
   );
 };
