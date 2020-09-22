@@ -11,13 +11,17 @@ interface NodeContent {
 interface Node {
   id: string;
   title: string;
-  connections?: Node[];
+  connections?: string[];
   content?: NodeContent[];
 }
 
 interface NodesById {
   [id: string]: Node;
 }
+
+const getNodes = (nodesById: NodesById, ids: string[]) => {
+  return Object.values(nodesById).filter((n) => ids.includes(n.id));
+};
 
 function App() {
   const [nodesById, setNodesById] = useState<NodesById>({});
@@ -49,13 +53,15 @@ function App() {
 
   return (
     <div className="">
-      <ul>
-        {Object.values(nodesById).map(({ id, title }) => (
-          <li onClick={() => fetchNode(id)} key={id}>
-            {title}
-          </li>
+      <div>
+        {Object.values(nodesById).map(({ id, title, connections }) => (
+          <div onClick={() => fetchNode(id)} key={id}>
+            <h2>{title}</h2>
+            {connections &&
+              getNodes(nodesById, connections).map((n) => <h3>{n.title}</h3>)}
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
