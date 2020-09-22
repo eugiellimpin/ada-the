@@ -20,7 +20,7 @@ interface NodesById {
 }
 
 const getNodes = (nodesById: NodesById, ids: number[]) => {
-  return Object.values(nodesById).filter((n) => ids.includes(n.id));
+  return ids.map(id => nodesById[id]);
 };
 
 interface NodeItemProps {
