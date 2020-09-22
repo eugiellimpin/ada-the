@@ -23,6 +23,25 @@ const getNodes = (nodesById: NodesById, ids: string[]) => {
   return Object.values(nodesById).filter((n) => ids.includes(n.id));
 };
 
+interface NodeItemProps {
+  node: Node;
+  connections: Node[];
+  onClick: () => void;
+}
+
+const NodeItem = ({ node, connections, onClick }: NodeItemProps) => {
+  const { id, title } = node;
+
+  return (
+    <div onClick={onClick} key={id}>
+      <h2>{title}</h2>
+      {connections.map((n) => (
+        <h3 key={n.id}>{n.title}</h3>
+      ))}
+    </div>
+  );
+};
+
 function App() {
   const [nodesById, setNodesById] = useState<NodesById>({});
 
@@ -54,12 +73,13 @@ function App() {
   return (
     <div className="">
       <div>
-        {Object.values(nodesById).map(({ id, title, connections }) => (
-          <div onClick={() => fetchNode(id)} key={id}>
-            <h2>{title}</h2>
-            {connections &&
-              getNodes(nodesById, connections).map((n) => <h3>{n.title}</h3>)}
-          </div>
+        {Object.values(nodesById).map((node) => (
+          <NodeItem
+            node={node}
+            connections={getNodes(nodesById, node.connections || [])}
+            onClick={() => fetchNode(node.id)}
+            key={node.id}
+          />
         ))}
       </div>
     </div>
