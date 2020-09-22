@@ -53,7 +53,7 @@ const NodeItem = ({
           return (
             <NodeItem
               node={n}
-              onClick={() => onClick(n.id)}
+              onClick={onClick}
               depth={depth + 1}
               getConnections={getConnections}
               key={n.id}
