@@ -9,9 +9,9 @@ interface NodeContent {
 }
 
 interface Node {
-  id: string;
+  id: number;
   title: string;
-  connections?: string[];
+  connections?: number[];
   content?: NodeContent[];
 }
 
@@ -19,25 +19,46 @@ interface NodesById {
   [id: string]: Node;
 }
 
-const getNodes = (nodesById: NodesById, ids: string[]) => {
+const getNodes = (nodesById: NodesById, ids: number[]) => {
   return Object.values(nodesById).filter((n) => ids.includes(n.id));
 };
 
 interface NodeItemProps {
   node: Node;
-  connections: Node[];
-  onClick: () => void;
+  onClick: (id: number) => void;
+  depth?: number;
+  getConnections: (ids: number[]) => Node[];
 }
 
-const NodeItem = ({ node, connections, onClick }: NodeItemProps) => {
-  const { id, title } = node;
+const NodeItem = ({
+  node,
+  onClick,
+  depth = 0,
+  getConnections,
+}: NodeItemProps) => {
+  const { id, title, connections } = node;
 
   return (
-    <div onClick={onClick} key={id}>
-      <h2>{title}</h2>
-      {connections.map((n) => (
-        <h3 key={n.id}>{n.title}</h3>
-      ))}
+    <div
+      onClick={(e) => {
+        onClick(id);
+      }}
+      key={id}
+      className={`node depth-${depth}`}
+    >
+      <p>
+        {depth} {title}
+      </p>
+      {depth < 2 &&
+        getConnections(connections || []).map((n) => (
+          <NodeItem
+            node={n}
+            onClick={() => onClick(n.id)}
+            depth={depth + 1}
+            getConnections={getConnections}
+            key={n.id}
+          />
+        ))}
     </div>
   );
 };
@@ -45,14 +66,14 @@ const NodeItem = ({ node, connections, onClick }: NodeItemProps) => {
 function App() {
   const [nodesById, setNodesById] = useState<NodesById>({});
 
-  const fetchNode = async (id: string) => {
+  const fetchNode = async (id: number) => {
     // This endpoint returns an array that contains only one node
     const [fetchedNode] = await ky.get(`/nodes/${id}`).json();
     console.assert(fetchNode.length === 1);
 
     setNodesById((prev) => ({
       ...prev,
-      [fetchedNode.id]: { ...prev[fetchedNode.id], ...fetchedNode },
+      [fetchedNode.id]: fetchedNode,
     }));
   };
 
@@ -76,8 +97,8 @@ function App() {
         {Object.values(nodesById).map((node) => (
           <NodeItem
             node={node}
-            connections={getNodes(nodesById, node.connections || [])}
-            onClick={() => fetchNode(node.id)}
+            onClick={fetchNode}
+            getConnections={(ids: number[]) => getNodes(nodesById, ids)}
             key={node.id}
           />
         ))}
