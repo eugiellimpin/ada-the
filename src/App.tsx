@@ -92,6 +92,7 @@ function App() {
 
   // Search
   const [query, setQuery] = useState("");
+  const [searchResults, setSearchResults] = useState({});
 
   const fetchNode = async (id: number) => {
     // This endpoint returns an array that contains only one node
@@ -105,12 +106,15 @@ function App() {
   };
 
   const search = async (query: string) => {
-    await ky.post(`/nodes/search`, { json: { query } }).json();
+    const searchResults: Node[] = await ky.post(`/nodes/search`, { json: { query } }).json();
+    setSearchResults({ query, searchResults });
   };
 
   // Fire request 500ms after user stops typing instead of firing the request
   // every keystroke
   const debouncedSearch = useMemo(() => debounce(search, 500), []);
+
+  console.log(searchResults);
 
   useEffect(() => {
     const fetchNodes = async () => {
