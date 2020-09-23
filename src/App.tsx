@@ -1,7 +1,8 @@
 import ky from "ky";
 import DOMPurify from "dompurify";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { sanitizeUrl } from "@braintree/sanitize-url";
+import { debounce } from "lodash-es";
 
 import "./App.css";
 
@@ -89,6 +90,9 @@ function App() {
   const [activeNodeIdPath, setActiveNodeIdPath] = useState<number[]>([]);
   const activeNodeId = activeNodeIdPath[activeNodeIdPath.length - 1];
 
+  // Search
+  const [query, setQuery] = useState("");
+
   const fetchNode = async (id: number) => {
     // This endpoint returns an array that contains only one node
     const [fetchedNode] = await ky.get(`/nodes/${id}`).json();
@@ -99,6 +103,14 @@ function App() {
       [fetchedNode.id]: fetchedNode,
     }));
   };
+
+  const search = async (query: string) => {
+    await ky.post(`/nodes/search`, { json: { query } }).json();
+  };
+
+  // Fire request 500ms after user stops typing instead of firing the request
+  // every keystroke
+  const debouncedSearch = useMemo(() => debounce(search, 500), []);
 
   useEffect(() => {
     const fetchNodes = async () => {
@@ -117,6 +129,21 @@ function App() {
   return (
     <div className="">
       <div className="sidebar">
+        <input
+          value={query}
+          onChange={(e) => {
+            const newQuery = e.currentTarget.value;
+            setQuery(newQuery);
+            // Use the newest search term value instead of the one in state
+            // since setState is async and we may have an outdated value when
+            // firing the search request
+            debouncedSearch(newQuery);
+          }}
+          type="text"
+          placeholder=""
+          className="search"
+        />
+
         {Object.values(nodesById).map((node) => (
           <NodeItem
             activePath={activeNodeIdPath.join("-")}
