@@ -45,9 +45,9 @@ const NodeItem = ({
 
   useEffect(() => {
     if (!!activePath) {
-      setIsOpen(activePath.startsWith(path.join("-")))
+      setIsOpen(activePath.startsWith(path.join("-")));
     }
-  }, [activePath, path])
+  }, [activePath, path]);
 
   return (
     <div key={id} className={`node depth-${depth}`}>
@@ -80,6 +80,7 @@ const NodeItem = ({
 function App() {
   const [nodesById, setNodesById] = useState<NodesById>({});
   const [activeNodeIdPath, setActiveNodeIdPath] = useState<number[]>([]);
+  const activeNodeId = activeNodeIdPath[activeNodeIdPath.length - 1];
 
   const fetchNode = async (id: number) => {
     // This endpoint returns an array that contains only one node
@@ -123,7 +124,17 @@ function App() {
           />
         ))}
       </div>
-      <div className="details"></div>
+      <div className="details">
+        {activeNodeId}
+
+        {(nodesById[activeNodeId]?.content || []).map(({ type, body }) => {
+          if (type === 'text') {
+            return <p>{body}</p>
+          }
+
+          return <p>{type}: {body}</p>
+        })}
+      </div>
     </div>
   );
 }
