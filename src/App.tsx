@@ -4,6 +4,7 @@ import { debounce } from "lodash-es";
 
 import "./App.css";
 import Details from "./components/Details";
+import SearchResults from "./components/SearchResults";
 
 interface ImageContent {
   type: "image";
@@ -90,8 +91,9 @@ function App() {
   const activeNodeId = activeNodeIdPath[activeNodeIdPath.length - 1];
 
   // Search
+  const [showSearchResults, setShowResults] = useState(false);
   const [query, setQuery] = useState("");
-  const [searchResults, setSearchResults] = useState({});
+  const [searchResults, setSearchResults] = useState<Node[]>([]);
 
   const fetchNode = async (id: number) => {
     // This endpoint returns an array that contains only one node
@@ -108,7 +110,8 @@ function App() {
     const searchResults: Node[] = await ky
       .post(`/nodes/search`, { json: { query } })
       .json();
-    setSearchResults({ query, searchResults });
+    setSearchResults(searchResults);
+    setShowResults(true);
   };
 
   // Fire request 500ms after user stops typing instead of firing the request
@@ -153,6 +156,7 @@ function App() {
             path={[node.id]}
             node={node}
             onClick={(id: number, path: number[]) => {
+              setShowResults(false);
               setActiveNodeIdPath(path);
               fetchNode(id);
             }}
@@ -162,7 +166,11 @@ function App() {
         ))}
       </div>
       <div className="details">
-        {activeNodeId && <Details node={nodesById[activeNodeId]} />}
+        {showSearchResults && <SearchResults results={searchResults} />}
+
+        {!showSearchResults && activeNodeId && (
+          <Details node={nodesById[activeNodeId]} />
+        )}
       </div>
     </div>
   );
