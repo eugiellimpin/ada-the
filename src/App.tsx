@@ -20,38 +20,51 @@ interface NodesById {
 }
 
 const getNodes = (nodesById: NodesById, ids: number[]) => {
-  return ids.map(id => nodesById[id]);
+  return ids.map((id) => nodesById[id]);
 };
 
 interface NodeItemProps {
+  activePath: string;
+  path: number[];
   node: Node;
-  onClick: (id: number) => void;
+  onClick: (id: number, path: number[]) => void;
   depth?: number;
   getConnections: (ids: number[]) => Node[];
 }
 
 const NodeItem = ({
+  activePath,
+  path,
   node,
   onClick,
   depth = 0,
   getConnections,
 }: NodeItemProps) => {
   const { id, title, connections } = node;
+  const [isOpen, setIsOpen] = useState(path.join("-") === activePath);
+
+  useEffect(() => {
+    if (!!activePath) {
+      setIsOpen(activePath.startsWith(path.join("-")))
+    }
+  }, [activePath, path])
 
   return (
     <div key={id} className={`node depth-${depth}`}>
       <button
-        onClick={(e) => {
-          e.stopPropagation();
-          onClick(id);
+        onClick={() => {
+          onClick(id, path);
         }}
       >
         {id} {title}
       </button>
-      {depth < 2 &&
+      {isOpen &&
+        depth < 2 &&
         getConnections(connections || []).map((n) => {
           return (
             <NodeItem
+              activePath={activePath}
+              path={[...path, n.id]}
               node={n}
               onClick={onClick}
               depth={depth + 1}
@@ -66,6 +79,7 @@ const NodeItem = ({
 
 function App() {
   const [nodesById, setNodesById] = useState<NodesById>({});
+  const [activeNodeIdPath, setActiveNodeIdPath] = useState<number[]>([]);
 
   const fetchNode = async (id: number) => {
     // This endpoint returns an array that contains only one node
@@ -97,13 +111,19 @@ function App() {
       <div className="sidebar">
         {Object.values(nodesById).map((node) => (
           <NodeItem
+            activePath={activeNodeIdPath.join("-")}
+            path={[node.id]}
             node={node}
-            onClick={fetchNode}
+            onClick={(id: number, path: number[]) => {
+              setActiveNodeIdPath(path);
+              fetchNode(id);
+            }}
             getConnections={(ids: number[]) => getNodes(nodesById, ids)}
             key={node.id}
           />
         ))}
       </div>
+      <div className="details"></div>
     </div>
   );
 }
