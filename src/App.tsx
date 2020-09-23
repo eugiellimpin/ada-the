@@ -1,9 +1,15 @@
 import ky from "ky";
+import DOMPurify from "dompurify";
 import React, { useEffect, useState } from "react";
 
 import "./App.css";
 
-interface NodeContent {
+interface ImageContent {
+  type: "image";
+  url: string;
+}
+
+interface TextContent {
   type: "text";
   body: string;
 }
@@ -12,7 +18,7 @@ interface Node {
   id: number;
   title: string;
   connections?: number[];
-  content?: NodeContent[];
+  content?: Array<TextContent | ImageContent>;
 }
 
 interface NodesById {
@@ -127,12 +133,27 @@ function App() {
       <div className="details">
         {activeNodeId}
 
-        {(nodesById[activeNodeId]?.content || []).map(({ type, body }) => {
-          if (type === 'text') {
-            return <p>{body}</p>
+        {(nodesById[activeNodeId]?.content || []).map((content) => {
+          if (content.type === "text") {
+            const cleanText = DOMPurify.sanitize(content.body);
+
+            if (!cleanText) return null;
+
+            return (
+              <p
+                dangerouslySetInnerHTML={{
+                  __html: cleanText,
+                }}
+              />
+            );
           }
 
-          return <p>{type}: {body}</p>
+          if (content.type === "image") {
+            // To do: make sure URL is safe and render <img />
+            return <img src={content.url} alt="" />;
+          }
+
+          return null;
         })}
       </div>
     </div>
