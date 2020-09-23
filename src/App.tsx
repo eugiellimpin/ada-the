@@ -1,10 +1,9 @@
 import ky from "ky";
-import DOMPurify from "dompurify";
 import React, { useEffect, useMemo, useState } from "react";
-import { sanitizeUrl } from "@braintree/sanitize-url";
 import { debounce } from "lodash-es";
 
 import "./App.css";
+import Details from "./components/Details";
 
 interface ImageContent {
   type: "image";
@@ -16,7 +15,7 @@ interface TextContent {
   body: string;
 }
 
-interface Node {
+export interface Node {
   id: number;
   title: string;
   connections?: number[];
@@ -106,15 +105,15 @@ function App() {
   };
 
   const search = async (query: string) => {
-    const searchResults: Node[] = await ky.post(`/nodes/search`, { json: { query } }).json();
+    const searchResults: Node[] = await ky
+      .post(`/nodes/search`, { json: { query } })
+      .json();
     setSearchResults({ query, searchResults });
   };
 
   // Fire request 500ms after user stops typing instead of firing the request
   // every keystroke
   const debouncedSearch = useMemo(() => debounce(search, 500), []);
-
-  console.log(searchResults);
 
   useEffect(() => {
     const fetchNodes = async () => {
@@ -163,30 +162,7 @@ function App() {
         ))}
       </div>
       <div className="details">
-        {activeNodeId}
-
-        {(nodesById[activeNodeId]?.content || []).map((content) => {
-          if (content.type === "text") {
-            const cleanText = DOMPurify.sanitize(content.body);
-
-            if (!cleanText) return null;
-
-            return (
-              <p
-                dangerouslySetInnerHTML={{
-                  __html: cleanText,
-                }}
-              />
-            );
-          }
-
-          if (content.type === "image") {
-            // To do: make sure URL is safe and render <img />
-            return <img src={sanitizeUrl(content.url)} alt="" />;
-          }
-
-          return null;
-        })}
+        {activeNodeId && <Details node={nodesById[activeNodeId]} />}
       </div>
     </div>
   );
