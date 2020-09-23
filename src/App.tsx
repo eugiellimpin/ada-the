@@ -1,6 +1,7 @@
 import ky from "ky";
 import DOMPurify from "dompurify";
 import React, { useEffect, useState } from "react";
+import { sanitizeUrl } from "@braintree/sanitize-url";
 
 import "./App.css";
 
@@ -150,7 +151,7 @@ function App() {
 
           if (content.type === "image") {
             // To do: make sure URL is safe and render <img />
-            return <img src={content.url} alt="" />;
+            return <img src={sanitizeUrl(content.url)} alt="" />;
           }
 
           return null;
