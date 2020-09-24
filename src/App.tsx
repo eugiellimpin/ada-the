@@ -140,10 +140,11 @@ function App() {
           onChange={(e) => {
             const newQuery = e.currentTarget.value;
             setQuery(newQuery);
+
             // Use the newest search term value instead of the one in state
             // since setState is async and we may have an outdated value when
             // firing the search request
-            debouncedSearch(newQuery);
+            if (!!newQuery.trim()) debouncedSearch(newQuery.trim());
           }}
           type="text"
           placeholder=""
@@ -166,7 +167,7 @@ function App() {
         ))}
       </div>
       <div className="details">
-        {showSearchResults && <SearchResults results={searchResults} />}
+        {!!query && showSearchResults && <SearchResults results={searchResults} />}
 
         {!showSearchResults && activeNodeId && (
           <Details node={nodesById[activeNodeId]} />
