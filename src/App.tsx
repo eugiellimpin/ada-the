@@ -93,7 +93,10 @@ function App() {
   // Search
   const [showSearchResults, setShowResults] = useState(false);
   const [query, setQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<Node[]>([]);
+  const [searchResults, setSearchResults] = useState<{
+    query?: string;
+    results?: Node[];
+  }>({});
 
   const fetchNode = async (id: number) => {
     // This endpoint returns an array that contains only one node
@@ -107,10 +110,10 @@ function App() {
   };
 
   const search = async (query: string) => {
-    const searchResults: Node[] = await ky
+    const results: Node[] = await ky
       .post(`/nodes/search`, { json: { query } })
       .json();
-    setSearchResults(searchResults);
+    setSearchResults({ query, results });
     setShowResults(true);
   };
 
@@ -167,7 +170,9 @@ function App() {
         ))}
       </div>
       <div className="details">
-        {!!query && showSearchResults && <SearchResults results={searchResults} />}
+        {query.trim() === searchResults.query && showSearchResults && (
+          <SearchResults results={searchResults.results || []} />
+        )}
 
         {!showSearchResults && activeNodeId && (
           <Details node={nodesById[activeNodeId]} />
