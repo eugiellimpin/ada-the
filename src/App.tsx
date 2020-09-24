@@ -4,7 +4,7 @@ import { debounce } from "lodash-es";
 
 import "./App.css";
 import Details from "./components/Details";
-import SearchResults from "./components/SearchResults";
+import SearchResults, { SearchResult } from "./components/SearchResults";
 
 interface ImageContent {
   type: "image";
@@ -93,10 +93,10 @@ function App() {
   // Search
   const [showSearchResults, setShowResults] = useState(false);
   const [query, setQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<{
-    query?: string;
-    results?: Node[];
-  }>({});
+  const [searchResults, setSearchResults] = useState<SearchResult>({
+    query: "",
+    results: [],
+  });
 
   const fetchNode = async (id: number) => {
     // This endpoint returns an array that contains only one node
@@ -171,7 +171,7 @@ function App() {
       </div>
       <div className="details">
         {query.trim() === searchResults.query && showSearchResults && (
-          <SearchResults results={searchResults.results || []} />
+          <SearchResults data={searchResults} />
         )}
 
         {!showSearchResults && activeNodeId && (
