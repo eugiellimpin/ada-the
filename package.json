@@ -15,6 +15,7 @@
     "dompurify": "^2.0.17",
     "ky": "^0.23.0",
     "lodash-es": "^4.17.15",
+    "mark.js": "^8.11.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.3",
