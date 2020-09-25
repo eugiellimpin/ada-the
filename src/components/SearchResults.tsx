@@ -9,7 +9,7 @@ export interface SearchResult {
   results: Node[];
 }
 
-const SearchResults = ({ data }: { data: SearchResult }) => {
+const SearchResults = ({ data, variables }: { data: SearchResult; variables: any }) => {
   const { results, query } = data;
 
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -26,7 +26,7 @@ const SearchResults = ({ data }: { data: SearchResult }) => {
       <h3>Search results</h3>
 
       {results.map((node) => (
-        <Details node={node} key={node.id}/>
+        <Details node={node} key={node.id} variables={variables} />
       ))}
     </div>
   );

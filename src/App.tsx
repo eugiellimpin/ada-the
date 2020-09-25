@@ -85,6 +85,22 @@ const NodeItem = ({
   );
 };
 
+type ById<T> = { [id: string]: T };
+function byId<T extends { id: any }>(objs: T[]): ById<T> {
+  // turn [{ id: any, ... }, ...] => { id: { id: any... }, ...} for easier
+  // access
+
+  return objs.reduce((db: ById<T>, obj: T) => {
+    db[obj.id] = obj;
+    return db;
+  }, {});
+}
+
+interface Variable {
+  id: string;
+  name: string;
+}
+
 function App() {
   const [nodesById, setNodesById] = useState<NodesById>({});
   const [activeNodeIdPath, setActiveNodeIdPath] = useState<number[]>([]);
@@ -97,6 +113,8 @@ function App() {
     query: "",
     results: [],
   });
+
+  const [variables, setVariables] = useState<ById<Variable>>({});
 
   const fetchNode = async (id: number) => {
     // This endpoint returns an array that contains only one node
@@ -122,18 +140,22 @@ function App() {
   const debouncedSearch = useMemo(() => debounce(search, 500), []);
 
   useEffect(() => {
+    const fetchVariables = async () => {
+      const variables: Variable[] = await ky.get("/variables").json();
+      setVariables(byId<Variable>(variables));
+    };
+
+    fetchVariables();
+  }, [setVariables]);
+
+  useEffect(() => {
     const fetchNodes = async () => {
       const fetchedNodes: Node[] = await ky.get("/nodes").json();
-      const nodesById = fetchedNodes.reduce((db, node) => {
-        db[node.id] = node;
-        return db;
-      }, {} as NodesById);
-
-      setNodesById(nodesById);
+      setNodesById(byId<Node>(fetchedNodes));
     };
 
     fetchNodes();
-  }, []);
+  }, [setNodesById]);
 
   return (
     <div className="">
@@ -171,11 +193,11 @@ function App() {
       </div>
       <div className="details">
         {query.trim() === searchResults.query && showSearchResults && (
-          <SearchResults data={searchResults} />
+          <SearchResults data={searchResults} variables={variables} />
         )}
 
         {!showSearchResults && activeNodeId && (
-          <Details node={nodesById[activeNodeId]} />
+          <Details node={nodesById[activeNodeId]} variables={variables} />
         )}
       </div>
     </div>

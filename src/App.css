@@ -17,3 +17,10 @@ body {
 .depth-2 {
   margin-left: 48px;
 }
+
+.variable {
+  color: #e6e1e5;
+  background-color: #b48ead;
+  padding: 3px;
+  border-radius: 6px;
+}
