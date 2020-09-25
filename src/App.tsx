@@ -5,6 +5,7 @@ import { debounce } from "lodash-es";
 import "./App.css";
 import Details from "./components/Details";
 import SearchResults, { SearchResult } from "./components/SearchResults";
+import { byId } from "./utils";
 
 interface ImageContent {
   type: "image";
@@ -85,22 +86,6 @@ const NodeItem = ({
   );
 };
 
-type ById<T> = { [id: string]: T };
-function byId<T extends { id: any }>(objs: T[]): ById<T> {
-  // turn [{ id: any, ... }, ...] => { id: { id: any... }, ...} for easier
-  // access
-
-  return objs.reduce((db: ById<T>, obj: T) => {
-    db[obj.id] = obj;
-    return db;
-  }, {});
-}
-
-interface Variable {
-  id: string;
-  name: string;
-}
-
 function App() {
   const [nodesById, setNodesById] = useState<NodesById>({});
   const [activeNodeIdPath, setActiveNodeIdPath] = useState<number[]>([]);
@@ -114,7 +99,6 @@ function App() {
     results: [],
   });
 
-  const [variables, setVariables] = useState<ById<Variable>>({});
 
   const fetchNode = async (id: number) => {
     // This endpoint returns an array that contains only one node
@@ -138,15 +122,6 @@ function App() {
   // Fire request 500ms after user stops typing instead of firing the request
   // every keystroke
   const debouncedSearch = useMemo(() => debounce(search, 500), []);
-
-  useEffect(() => {
-    const fetchVariables = async () => {
-      const variables: Variable[] = await ky.get("/variables").json();
-      setVariables(byId<Variable>(variables));
-    };
-
-    fetchVariables();
-  }, [setVariables]);
 
   useEffect(() => {
     const fetchNodes = async () => {
@@ -193,11 +168,11 @@ function App() {
       </div>
       <div className="details">
         {query.trim() === searchResults.query && showSearchResults && (
-          <SearchResults data={searchResults} variables={variables} />
+          <SearchResults data={searchResults} />
         )}
 
         {!showSearchResults && activeNodeId && (
-          <Details node={nodesById[activeNodeId]} variables={variables} />
+          <Details node={nodesById[activeNodeId]} />
         )}
       </div>
     </div>

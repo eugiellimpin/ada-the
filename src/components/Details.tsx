@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DOMPurify from "dompurify";
 import { sanitizeUrl } from "@braintree/sanitize-url";
+import ky from "ky";
 
 import { Node } from "../App";
+import { byId, ById } from "../utils";
 
 const VARIABLE_REGEX = /{\w+\|\w*}/g;
 
@@ -45,7 +47,23 @@ const Template = React.memo(
   }
 );
 
-const Details = ({ node, variables }: { node: Node; variables: any }) => {
+interface Variable {
+  id: string;
+  name: string;
+}
+
+const Details = ({ node }: { node: Node }) => {
+  const [variables, setVariables] = useState<ById<Variable>>({});
+
+  useEffect(() => {
+    const fetchVariables = async () => {
+      const variables: Variable[] = await ky.get("/variables").json();
+      setVariables(byId<Variable>(variables));
+    };
+
+    fetchVariables();
+  }, [setVariables]);
+
   const { title } = node;
 
   return (
