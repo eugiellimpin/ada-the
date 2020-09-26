@@ -35,7 +35,7 @@ const Template = React.memo(
         .slice(1, -1)
         .split("|");
       chunks.push(
-        <Variable value={context[id]?.name || defaultValue} key={id} />
+        <Variable value={context[id]?.name || defaultValue} key={`${id}-${index}`} />
       );
 
       cursor = index + variable.length;
