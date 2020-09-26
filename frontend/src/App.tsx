@@ -182,7 +182,7 @@ function App() {
           <SearchResults data={searchResults} />
         )}
 
-        {!showSearchResults && activeNodeId && (
+        {(!query || !showSearchResults) && activeNodeId && (
           <Details node={nodesById[activeNodeId]} />
         )}
       </main>
