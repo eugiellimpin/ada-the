@@ -7,7 +7,7 @@ import Details from "./components/Details";
 import SearchResults, { SearchResult } from "./components/SearchResults";
 import { byId } from "./utils";
 
-import "./normalize.css"
+import "./normalize.css";
 import "./index.css";
 
 interface ImageContent {
@@ -140,10 +140,12 @@ function App() {
     <div className="with-sidebar">
       <nav className="sidebar">
         <div className="search">
-          <form onSubmit={(e: React.SyntheticEvent) => {
-            e.preventDefault();
-            if (!!query.trim()) debouncedSearch(query.trim());
-          }}>
+          <form
+            onSubmit={(e: React.SyntheticEvent) => {
+              e.preventDefault();
+              if (!!query.trim()) debouncedSearch(query.trim());
+            }}
+          >
             <input
               value={query}
               onChange={(e) => {
@@ -184,6 +186,15 @@ function App() {
 
         {(!query || !showSearchResults) && activeNodeId && (
           <Details node={nodesById[activeNodeId]} />
+        )}
+
+        {!showSearchResults && !activeNodeId && (
+          <p>
+            <span role="img" aria-label="Point to sidebar">
+              👈{" "}
+            </span>
+            select or search something to start your journey!
+          </p>
         )}
       </main>
     </div>
