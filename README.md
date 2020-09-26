@@ -72,3 +72,14 @@ for this too)
 - If there are a lot of variables the API endpoint could be improved by
 having it accept a list of variable ids to return. The frontend could then
 determine in advance which variables it needs and request only for those.
+
+# Areas of improvement
+
+I've pointed out some areas of improvement in the Implementation details
+section but here are some more that I would have implemented if I had more
+time
+
+- UI states
+  - empty
+  - loading
+  - error
