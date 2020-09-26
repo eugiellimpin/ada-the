@@ -12,6 +12,7 @@
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
+    "classnames": "^2.2.6",
     "dompurify": "^2.0.17",
     "ky": "^0.23.0",
     "lodash-es": "^4.17.15",
@@ -22,7 +23,7 @@
     "typescript": "~3.7.2"
   },
   "scripts": {
-    "s": "react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -44,6 +45,7 @@
   },
   "proxy": "http://localhost:5000",
   "devDependencies": {
+    "@types/classnames": "^2.2.10",
     "@types/lodash-es": "^4.17.3"
   }
 }

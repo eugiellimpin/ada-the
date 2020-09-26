@@ -22,7 +22,7 @@ const SearchResults = ({ data }: { data: SearchResult }) => {
   }, [query, containerRef]);
 
   return (
-    <div ref={containerRef}>
+    <div className="search-results" ref={containerRef}>
       <h3>Search results</h3>
 
       {results.map((node) => (

@@ -67,7 +67,7 @@ const Details = ({ node }: { node: Node }) => {
   const { title } = node;
 
   return (
-    <div>
+    <div className="details">
       <h2>{title}</h2>
 
       {(node.content || []).map((content, index) => {

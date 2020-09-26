@@ -1,11 +1,14 @@
 import ky from "ky";
+import c from "classnames";
 import React, { useEffect, useMemo, useState } from "react";
 import { debounce } from "lodash-es";
 
-import "./App.css";
 import Details from "./components/Details";
 import SearchResults, { SearchResult } from "./components/SearchResults";
 import { byId } from "./utils";
+
+import "./normalize.css"
+import "./index.css";
 
 interface ImageContent {
   type: "image";
@@ -58,14 +61,16 @@ const NodeItem = ({
     }
   }, [activePath, path]);
 
+  const isActive = activePath === path.join("-");
+
   return (
-    <div key={id} className={`node depth-${depth}`}>
+    <div key={id} className={c(`node depth-${depth}`, { isOpen, isActive })}>
       <button
         onClick={() => {
           onClick(id, path);
         }}
       >
-        {id} {title}
+        {title}
       </button>
       {isOpen &&
         depth < 2 &&
@@ -98,7 +103,6 @@ function App() {
     query: "",
     results: [],
   });
-
 
   const fetchNode = async (id: number) => {
     // This endpoint returns an array that contains only one node
@@ -133,23 +137,24 @@ function App() {
   }, [setNodesById]);
 
   return (
-    <div className="">
+    <div className="with-sidebar">
       <div className="sidebar">
-        <input
-          value={query}
-          onChange={(e) => {
-            const newQuery = e.currentTarget.value;
-            setQuery(newQuery);
+        <div className="search">
+          <input
+            value={query}
+            onChange={(e) => {
+              const newQuery = e.currentTarget.value;
+              setQuery(newQuery);
 
-            // Use the newest search term value instead of the one in state
-            // since setState is async and we may have an outdated value when
-            // firing the search request
-            if (!!newQuery.trim()) debouncedSearch(newQuery.trim());
-          }}
-          type="text"
-          placeholder=""
-          className="search"
-        />
+              // Use the newest search term value instead of the one in state
+              // since setState is async and we may have an outdated value when
+              // firing the search request
+              if (!!newQuery.trim()) debouncedSearch(newQuery.trim());
+            }}
+            type="text"
+            placeholder="Search"
+          />
+        </div>
 
         {Object.values(nodesById).map((node) => (
           <NodeItem
@@ -166,7 +171,8 @@ function App() {
           />
         ))}
       </div>
-      <div className="details">
+
+      <div className="main">
         {query.trim() === searchResults.query && showSearchResults && (
           <SearchResults data={searchResults} />
         )}
