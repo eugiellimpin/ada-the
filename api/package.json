@@ -4,7 +4,7 @@
   "description": "a frontend take home test for Ada",
   "main": "api.js",
   "scripts": {
-    "s": "node ./api.js",
+    "start": "node ./api.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Brandon Mowat",
