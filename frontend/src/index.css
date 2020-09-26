@@ -4,6 +4,7 @@
   --light-gray1: #D8DEE9;
   --light-gray2: #ECEFF4;
   --pink: #B48EAD;
+  --yellow: #EBCB8B;
 
   --border-radius: 12px;
 
@@ -122,4 +123,10 @@ main {
   border-radius: var(--border-radius);
   background-color: var(--pink);
   color: var(--white);
+}
+
+mark {
+  font-style: italic;
+  padding: 0 3px;
+  background-color: var(--yellow);
 }
