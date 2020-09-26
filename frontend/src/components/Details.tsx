@@ -14,6 +14,8 @@ const Variable = ({ value }: { value: string }) => {
   return <span className="variable">{value}</span>;
 };
 
+// Memoize the component to avoid unnecessarily rebuilding the template even
+// when there are no changes to render
 const Template = React.memo(
   ({ content, context = {} }: { content: string; context: any }) => {
     const matches = content.matchAll(VARIABLE_REGEX);
