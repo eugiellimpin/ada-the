@@ -84,7 +84,6 @@ const Details = ({ node }: { node: Node }) => {
         }
 
         if (content.type === "image") {
-          // To do: make sure URL is safe and render <img />
           return <img src={sanitizeUrl(content.url)} alt="" key={index} />;
         }
 
