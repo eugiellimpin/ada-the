@@ -138,7 +138,7 @@ function App() {
 
   return (
     <div className="with-sidebar">
-      <div className="sidebar">
+      <nav className="sidebar">
         <div className="search">
           <input
             value={query}
@@ -170,9 +170,9 @@ function App() {
             key={node.id}
           />
         ))}
-      </div>
+      </nav>
 
-      <div className="main">
+      <main>
         {query.trim() === searchResults.query && showSearchResults && (
           <SearchResults data={searchResults} />
         )}
@@ -180,7 +180,7 @@ function App() {
         {!showSearchResults && activeNodeId && (
           <Details node={nodesById[activeNodeId]} />
         )}
-      </div>
+      </main>
     </div>
   );
 }

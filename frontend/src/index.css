@@ -45,7 +45,7 @@ img {
   flex-grow: 1;
 }
 
-.main {
+main {
   min-height: 100vh;
   flex-basis: 0;
   flex-grow: 999;
