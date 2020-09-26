@@ -140,20 +140,25 @@ function App() {
     <div className="with-sidebar">
       <nav className="sidebar">
         <div className="search">
-          <input
-            value={query}
-            onChange={(e) => {
-              const newQuery = e.currentTarget.value;
-              setQuery(newQuery);
+          <form onSubmit={(e: React.SyntheticEvent) => {
+            e.preventDefault();
+            if (!!query.trim()) debouncedSearch(query.trim());
+          }}>
+            <input
+              value={query}
+              onChange={(e) => {
+                const newQuery = e.currentTarget.value;
+                setQuery(newQuery);
 
-              // Use the newest search term value instead of the one in state
-              // since setState is async and we may have an outdated value when
-              // firing the search request
-              if (!!newQuery.trim()) debouncedSearch(newQuery.trim());
-            }}
-            type="text"
-            placeholder="Search"
-          />
+                // Use the newest search term value instead of the one in state
+                // since setState is async and we may have an outdated value when
+                // firing the search request
+                if (!!newQuery.trim()) debouncedSearch(newQuery.trim());
+              }}
+              type="text"
+              placeholder="Search"
+            />
+          </form>
         </div>
 
         {Object.values(nodesById).map((node) => (
