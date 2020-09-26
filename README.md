@@ -46,9 +46,10 @@ building from scratch unless nothing exists for the intended use case. Open
 source has a lot of advantages over a custom solution–most issues have been
 reported by the users and most probably fixed if the lib is popular enough,
 less maintenance, battle-tested, etc.
-If had to do it from scratch I would probably have the same
+
+   If had to do it from scratch I would probably have the same
 solution as the one for Challenge 3: Content template strings
-- I updated the /search endpoint to return the contents of matches nodes to
+- I updated the `/search` endpoint to return the contents of matches nodes to
 avoid separate requests to fetch content data for each matches nodes.
 - Search requests are debounced (using lodash-es for smaller bundle size) so
 they only fire when the user stops typing for more than 500ms as opposed to firing on each keystroke.
@@ -56,3 +57,18 @@ they only fire when the user stops typing for more than 500ms as opposed to firi
 for this too)
 
 ## Challenge 3: Content template strings
+
+- My implementation is a simple process:
+   1. Check if there are variables in the content (just render it with a `<p/>` if there's none)
+   2. For each variable, add the string before it to the array of
+   `React.Nodes` to render and build a `<Variable />` component that displays
+   the value of the corresponding variable from the context (fetched
+   variables) or its default value
+   3. Add any leftover string after the last variable to the array of
+   `React.Node`s
+
+   The resulting `<Template />` component is memoized to avoid unnecessary
+   re-renders when given the same context object.
+- If there are a lot of variables the API endpoint could be improved by
+having it accept a list of variable ids to return. The frontend could then
+determine in advance which variables it needs and request only for those.

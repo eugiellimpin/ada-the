@@ -97,6 +97,11 @@ main {
   width: 100%;
 }
 
+.search input:hover {
+  border-width: 1px;
+  border-color: var(--pink);
+}
+
 .search input:focus {
   border-width: 2px;
   border-color: var(--pink);
