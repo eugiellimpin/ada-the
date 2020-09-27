@@ -37,6 +37,14 @@ cd frontend/
 yarn test
 ```
 
+# Review guide
+
+- The code related to sidebar (node tree and search) are all in `App.tsx`
+- Search results (highlighting) implementation in `components/SearchResults.tsx`
+- Detail view (template strings) implementation is in `components/Details.tsx`
+- Integration tests are all in `App.test.tsx`
+- Styles in `index.css`
+
 # Implementation details
 
 ## Challenge 1: Sidebar
