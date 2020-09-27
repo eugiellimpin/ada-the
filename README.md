@@ -103,3 +103,8 @@ creating responsive apps, using semantic HTML, having labels for form inputs
 and other common accessibility best practices. Making the app keyboard
 accessible, good color contrast, and having support for screen-readers would
 be a good improvement path.
+5. Clean up code. Some components have been extracted to their own modules
+for maintainability and loose-coupling but there's a lot of room for
+improvement. `<App />`, for example, is doing a lot (sidebar node tree,
+search) so I would clean this up and have separate components and move other
+unrelated code to their own modules (e.g. helper functions to utils.ts).
