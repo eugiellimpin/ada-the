@@ -68,8 +68,8 @@ less maintenance, battle-tested, etc.
 
    If had to do it from scratch I would probably have the same
 solution as the one for Challenge 3: Content template strings
-- I updated the `/search` endpoint to return the contents of matches nodes to
-avoid separate requests to fetch content data for each matches nodes.
+- I updated the `/search` endpoint to return the contents of matched nodes to
+avoid separate requests to fetch content data for each matched nodes.
 - Search requests are debounced (using lodash-es for smaller bundle size) so
 they only fire when the user stops typing for more than 500ms as opposed to firing on each keystroke.
 - Blank strings don't trigger search requests (API returns 400 errors
