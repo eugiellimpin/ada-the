@@ -18,6 +18,20 @@ yarn start
 
 This should automatically open `localhost:3000` in your default browser.
 
+## Tests
+
+Integration tests written with [React Testing
+Library](https://github.com/testing-library/react-testing-library) can be
+found in `App.test.tsx`. They closely resemble how a user would interact with
+the application (versus having unit tests that cover implementation details).
+
+To run them:
+
+```
+cd frontend/
+yarn test
+```
+
 # Implementation details
 
 ## Challenge 1: Sidebar
