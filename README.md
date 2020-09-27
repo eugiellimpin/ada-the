@@ -2,7 +2,7 @@
 
 ## API
 
-```
+```sh
 cd api/
 yarn install
 yarn start
@@ -27,7 +27,7 @@ the application (versus having unit tests that cover implementation details).
 
 To run them:
 
-```
+```sh
 cd frontend/
 yarn test
 ```
@@ -90,10 +90,16 @@ determine in advance which variables it needs and request only for those.
 # Areas of improvement
 
 I've pointed out some areas of improvement in the Implementation details
-section but here are some more that I would have implemented if I had more
-time
+section but here are some more that I would have tackled to make the app
+production-ready if I had more time
 
-- UI states
-  - empty
-  - loading
-  - error
+1. Improve UX by handling UI states (empty, loading and error, etc.).
+2. Have e2e tests for critical user flows in addition to integration tests
+3. Improve application performance by caching assets, minimizing bundle size
+as much as possible (code-splitting, image optimization, run lighthouse audit
+to see performance problems and fix them), etc.
+4. Improve Accessibility. Admittedly, my experience with this is limited to
+creating responsive apps, using semantic HTML, having labels for form inputs
+and other common accessibility best practices. Making the app keyboard
+accessible, good color contrast, and having support for screen-readers would
+be a good improvement path.
