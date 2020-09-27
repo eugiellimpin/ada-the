@@ -10,6 +10,8 @@ import { byId } from "./utils";
 import "./normalize.css";
 import "./index.css";
 
+const apiUrl = process.env.API_URL ? process.env.API_URL : '';
+
 interface ImageContent {
   type: "image";
   url: string;
@@ -106,7 +108,7 @@ function App() {
 
   const fetchNode = async (id: number) => {
     // This endpoint returns an array that contains only one node
-    const [fetchedNode] = await ky.get(`/nodes/${id}`).json();
+    const [fetchedNode] = await ky.get(`${apiUrl}/nodes/${id}`).json();
     console.assert(fetchNode.length === 1);
 
     setNodesById((prev) => ({
@@ -117,7 +119,7 @@ function App() {
 
   const search = async (query: string) => {
     const results: Node[] = await ky
-      .post(`/nodes/search`, { json: { query } })
+      .post(`${apiUrl}/nodes/search`, { json: { query } })
       .json();
     setSearchResults({ query, results });
     setShowResults(true);
@@ -129,7 +131,9 @@ function App() {
 
   useEffect(() => {
     const fetchNodes = async () => {
-      const fetchedNodes: Node[] = await ky.get("/nodes").json();
+      const fetchedNodes: Node[] = await ky
+        .get(`${apiUrl}/nodes`)
+        .json();
       setNodesById(byId<Node>(fetchedNodes));
     };
 

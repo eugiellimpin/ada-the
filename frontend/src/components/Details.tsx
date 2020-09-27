@@ -6,7 +6,9 @@ import ky from "ky";
 import { Node } from "../App";
 import { byId, ById } from "../utils";
 
-const VARIABLE_REGEX = /{\w+\|\w*}/g;
+const apiUrl = process.env.API_URL ? process.env.API_URL : '';
+
+const VARIABLE_REGEX = /{\w+\|.*?}/g;
 
 const hasVariables = (content: string) => !!content.match(VARIABLE_REGEX);
 
@@ -37,7 +39,10 @@ const Template = React.memo(
         .slice(1, -1)
         .split("|");
       chunks.push(
-        <Variable value={context[id]?.name || defaultValue} key={`${id}-${index}`} />
+        <Variable
+          value={context[id]?.name || defaultValue}
+          key={`${id}-${index}`}
+        />
       );
 
       cursor = index + variable.length;
@@ -59,7 +64,9 @@ const Details = ({ node }: { node: Node }) => {
 
   useEffect(() => {
     const fetchVariables = async () => {
-      const variables: Variable[] = await ky.get("/variables").json();
+      const variables: Variable[] = await ky
+        .get(`${apiUrl}/variables`)
+        .json();
       setVariables(byId<Variable>(variables));
     };
 
