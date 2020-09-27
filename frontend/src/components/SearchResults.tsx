@@ -28,6 +28,15 @@ const SearchResults = ({ data }: { data: SearchResult }) => {
       {results.map((node) => (
         <Details node={node} key={node.id} />
       ))}
+
+      {results.length < 1 && (
+        <p>
+          There are no contents that match what you're looking for{" "}
+          <span role="img" aria-label="Shrug">
+            🤷‍♂️
+          </span>
+        </p>
+      )}
     </div>
   );
 };
